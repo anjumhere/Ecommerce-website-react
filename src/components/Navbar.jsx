@@ -5,10 +5,16 @@ import { FaCartShopping } from "react-icons/fa6";
 import { Show, SignInButton, UserButton } from "@clerk/react";
 import { CgClose } from "react-icons/cg";
 
-const Navbar = ({ location, getLocation, openDropDown, setOpenDropDown }) => {
+const Navbar = ({
+  userLocation,
+  getLocation,
+  openDropDown,
+  setOpenDropDown,
+}) => {
   const toggleDropDown = () => {
     setOpenDropDown(!openDropDown);
   };
+
   return (
     <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
       <div className="max-w-6xl mx-auto flex justify-between items-center px-6 h-16">
@@ -19,102 +25,119 @@ const Navbar = ({ location, getLocation, openDropDown, setOpenDropDown }) => {
               <span className="text-gray-900">artzy</span>
             </h1>
           </Link>
-          <div className="text-gray-700 flex gap-2 cursor-pointer items-center px-3 py-1.5 rounded-full border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 group">
-            <MapPin className="text-red-500 w-3.5 h-3.5 shrink-0" />
-            <span className="text-xs font-medium">
-              {location ? (
-                <div className="-space-y-0.5">
-                  <p className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
-                    {location.county}
-                  </p>
-                  <p className="text-gray-400">{location.state}</p>
-                </div>
-              ) : (
-                <span className="text-gray-500 group-hover:text-red-500 transition-colors">
-                  Add Address
-                </span>
-              )}
-            </span>
-            <FaCaretDown
-              className="text-[10px] text-gray-400 group-hover:text-red-400 transition-colors ml-0.5"
-              onClick={toggleDropDown}
-            />
-          </div>
-          {openDropDown ? (
-            <div className="w-56 z-50 fixed bg-white top-20 left-56 border border-gray-100 shadow-xl shadow-gray-100/80 p-5 rounded-2xl">
-              <h1 className="font-semibold mb-4 text-sm text-gray-800 flex justify-between items-center">
-                Change Location
-                <span>
-                  <CgClose
-                    className="cursor-pointer text-base text-gray-400 hover:text-red-500 transition-colors"
-                    onClick={() => {
-                      setOpenDropDown(false);
-                    }}
-                  />
-                </span>
-              </h1>
-              <button
-                onClick={getLocation}
-                className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all duration-200 shadow-sm shadow-red-200"
-              >
-                Detect My Location
-              </button>
+
+          <div className="relative">
+            <div className="text-gray-700 flex gap-2 cursor-pointer items-center px-3 py-1.5 rounded-full border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 group">
+              <MapPin className="text-red-500 w-3.5 h-3.5 shrink-0" />
+              <span className="text-xs font-medium">
+                {userLocation ? (
+                  <div className="-space-y-0.5">
+                    <p className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
+                      {userLocation.county}
+                    </p>
+                    <p className="text-gray-400">{userLocation.state}</p>
+                  </div>
+                ) : (
+                  <span className="text-gray-500 group-hover:text-red-500 transition-colors">
+                    Add Address
+                  </span>
+                )}
+              </span>
+
+              <FaCaretDown
+                aria-label="Toggle location dropdown"
+                className="text-[10px] text-gray-400 group-hover:text-red-400 transition-colors ml-0.5"
+                onClick={toggleDropDown}
+              />
             </div>
-          ) : null}
+
+            {openDropDown ? (
+              <div className="w-56 z-50 absolute top-12 left-0 bg-white border border-gray-100 shadow-xl shadow-gray-100/80 p-5 rounded-2xl">
+                <h1 className="font-semibold mb-4 text-sm text-gray-800 flex justify-between items-center">
+                  Change Location
+                  <span>
+                    <CgClose
+                      className="cursor-pointer text-base text-gray-400 hover:text-red-500 transition-colors"
+                      onClick={() => {
+                        setOpenDropDown(false);
+                      }}
+                    />
+                  </span>
+                </h1>
+                <button
+                  onClick={getLocation}
+                  className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold cursor-pointer active:scale-95 transition-all duration-200 shadow-sm shadow-red-200"
+                >
+                  Detect My Location
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
+
         <nav className="flex gap-6 items-center">
-          <ul className="flex gap-1 items-center text-sm font-medium">
-            <NavLink
-              to={"/"}
-              className={({ isActive }) =>
-                `transition-all duration-200 px-4 py-1.5 rounded-full ${
-                  isActive
-                    ? "text-red-500 bg-red-50"
-                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                }`
-              }
-            >
-              <li>Home</li>
-            </NavLink>
-            <NavLink
-              to={"/products"}
-              className={({ isActive }) =>
-                `transition-all duration-200 px-4 py-1.5 rounded-full ${
-                  isActive
-                    ? "text-red-500 bg-red-50"
-                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                }`
-              }
-            >
-              <li>Products</li>
-            </NavLink>
-            <NavLink
-              to={"/about"}
-              className={({ isActive }) =>
-                `transition-all duration-200 px-4 py-1.5 rounded-full ${
-                  isActive
-                    ? "text-red-500 bg-red-50"
-                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                }`
-              }
-            >
-              <li>About</li>
-            </NavLink>
-            <NavLink
-              to={"/contact"}
-              className={({ isActive }) =>
-                `transition-all duration-200 px-4 py-1.5 rounded-full ${
-                  isActive
-                    ? "text-red-500 bg-red-50"
-                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                }`
-              }
-            >
-              <li>Contact</li>
-            </NavLink>
+          <ul className="flex gap-1 items-center text-sm font-medium list-none">
+            <li>
+              <NavLink
+                to={"/"}
+                className={({ isActive }) =>
+                  `transition-all duration-200 px-4 py-1.5 rounded-full block ${
+                    isActive
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  }`
+                }
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/products"}
+                className={({ isActive }) =>
+                  `transition-all duration-200 px-4 py-1.5 rounded-full block ${
+                    isActive
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  }`
+                }
+              >
+                Products
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/about"}
+                className={({ isActive }) =>
+                  `transition-all duration-200 px-4 py-1.5 rounded-full block ${
+                    isActive
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  }`
+                }
+              >
+                About
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/contact"}
+                className={({ isActive }) =>
+                  `transition-all duration-200 px-4 py-1.5 rounded-full block ${
+                    isActive
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  }`
+                }
+              >
+                Contact
+              </NavLink>
+            </li>
           </ul>
+
           <Link
             to={"/cart"}
+            aria-label="Cart, 0 items"
             className="relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 group"
           >
             <FaCartShopping className="h-4 w-4 text-gray-600 group-hover:text-red-500 transition-colors" />
@@ -122,7 +145,9 @@ const Navbar = ({ location, getLocation, openDropDown, setOpenDropDown }) => {
               0
             </span>
           </Link>
+
           <div className="w-px h-5 bg-gray-200" />
+
           <div className="flex items-center gap-2">
             <Show when="signed-out">
               <SignInButton>
@@ -142,3 +167,14 @@ const Navbar = ({ location, getLocation, openDropDown, setOpenDropDown }) => {
 };
 
 export default Navbar;
+
+/* Improvements 
+location → userLocation
+Added relative wrapper div
+fixed → absolute
+Removed hardcoded top-16 left-60
+<NavLink><li> → <li><NavLink>
+Added aria-label on cart
+Added aria-label on caret
+Tailwind classes restyled
+*/

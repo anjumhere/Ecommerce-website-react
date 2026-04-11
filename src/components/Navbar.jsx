@@ -10,123 +10,110 @@ const Navbar = ({ location, getLocation, openDropDown, setOpenDropDown }) => {
     setOpenDropDown(!openDropDown);
   };
   return (
-    <div className="bg-white py-3 shadow-2xl">
-      <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-7 ">
+    <div className="bg-white/80 backdrop-blur-md py-0 border-b shadow-2xl  border-gray-100 sticky top-0 z-40">
+      <div className="max-w-6xl mx-auto flex justify-between items-center px-6 h-16">
+        {/* Left */}
+        <div className="flex items-center gap-8">
           <Link to={"/"}>
-            <h1 className="font-bold text-3xl">
-              <span className="text-red-500 font-serif">C</span>artzy
+            <h1 className="text-2xl font-black tracking-tight select-none">
+              <span className="text-red-500">C</span>
+              <span className="text-gray-900">artzy</span>
             </h1>
           </Link>
-          <div className="text-gray-700 flex gap-1 cursor-pointer items-center">
-            <MapPin className="text-red-500" />
-            <span className="font-semibold ">
+
+          <div
+            onClick={toggleDropDown}
+            className="flex items-center gap-2 cursor-pointer group px-3 py-1.5 rounded-full border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200"
+          >
+            <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" />
+            <div className="text-xs leading-tight">
               {location ? (
-                <div className="-space-y-2">
-                  <p>{location.county}</p>
-                  <p>{location.state}</p>
-                </div>
+                <>
+                  <p className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
+                    {location.county}
+                  </p>
+                  <p className="text-gray-400">{location.state}</p>
+                </>
               ) : (
-                "Add Address"
-              )}
-            </span>
-            <FaCaretDown
-              className="text-lg hover:text-red-500"
-              onClick={toggleDropDown}
-            />
-          </div>
-          {openDropDown ? (
-            <div className="w-[250px] h-max shadow-2xl z-50 fixed bg-white top-16 left-60 border-2 p-5 border-gray-100 rounded-md">
-              <h1 className="font-semibold mb-4 text-xl  flex justify-between ">
-                Change Location
-                <span>
-                  <CgClose
-                    className="cursor-pointer text-xl hover:text-red-500 font-bold"
-                    onClick={() => {
-                      setOpenDropDown(false);
-                    }}
-                  />
+                <span className="font-medium text-gray-500 group-hover:text-red-500 transition-colors">
+                  Add address
                 </span>
-              </h1>
+              )}
+            </div>
+            <FaCaretDown className="text-gray-400 text-[10px] group-hover:text-red-400 transition-colors ml-0.5" />
+          </div>
+
+          {openDropDown && (
+            <div className="w-56 z-50 fixed bg-white top-20 left-56 border border-gray-100 shadow-xl shadow-gray-100/80 p-5 rounded-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-sm font-semibold text-gray-800">
+                  Your Location
+                </p>
+                <CgClose
+                  className="cursor-pointer text-base text-gray-400 hover:text-red-500 transition-colors"
+                  onClick={() => setOpenDropDown(false)}
+                />
+              </div>
               <button
                 onClick={getLocation}
-                className="bg-red-500 hover:bg-red-400 hover:text-white text-white  px-4   py-2 rounded-lg text-sm cursor-pointer active:scale-97"
+                className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 shadow-sm shadow-red-200"
               >
+                <MapPin className="w-3.5 h-3.5" />
                 Detect My Location
               </button>
             </div>
-          ) : null}
+          )}
         </div>
-        <nav className="flex gap-7 items-center">
-          <ul className="flex gap-7 items-center text-xl font-semibold">
+
+        {/* Center Nav */}
+        <ul className="flex items-center gap-1">
+          {[
+            { to: "/", label: "Home" },
+            { to: "/products", label: "Products" },
+            { to: "/about", label: "About" },
+            { to: "/contact", label: "Contact" },
+          ].map(({ to, label }) => (
             <NavLink
-              to={"/"}
+              key={to}
+              to={to}
               className={({ isActive }) =>
-                `transition-all duration-300 ${
+                `relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 list-none ${
                   isActive
-                    ? "border-b-3 border-red-500"
-                    : "border-b-3 border-transparent"
+                    ? "text-red-500 bg-red-50"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                 }`
               }
             >
-              <li>Home</li>
+              <li>{label}</li>
             </NavLink>
-            <NavLink
-              to={"/products"}
-              className={({ isActive }) =>
-                `transition-all duration-300 ${
-                  isActive
-                    ? "border-b-3 border-red-500"
-                    : "border-b-3 border-transparent"
-                }`
-              }
-            >
-              <li>Products</li>
-            </NavLink>
-            <NavLink
-              to={"/about"}
-              className={({ isActive }) =>
-                `transition-all duration-300 ${
-                  isActive
-                    ? "border-b-3 border-red-500 "
-                    : "border-b-3 border-transparent"
-                }`
-              }
-            >
-              <li>About</li>
-            </NavLink>
-            <NavLink
-              to={"/contact"}
-              className={({ isActive }) =>
-                `transition-all duration-300 ${
-                  isActive
-                    ? "border-b-3 border-red-500"
-                    : "border-b-3 border-transparent"
-                }`
-              }
-            >
-              <li>Contact</li>
-            </NavLink>
-          </ul>
-          <Link to={"/cart"} className=" relative">
-            <FaCartShopping className="h-6 w-7 " />
-            <span className="bg-red-500 rounded-full px-2 py-1 font-bold text-xs text-white flex justify-center items-center absolute bottom-4 left-5">
+          ))}
+        </ul>
+
+        {/* Right */}
+        <div className="flex items-center gap-3">
+          <Link
+            to={"/cart"}
+            className="relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 group"
+          >
+            <FaCartShopping className="w-4 h-4 text-gray-600 group-hover:text-red-500 transition-colors" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
               0
             </span>
           </Link>
-          <div className="flex items-center gap-2 ">
-            <Show when="signed-out">
-              <SignInButton>
-                <button className="px-4 py-1.5 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all duration-300">
-                  Sign In
-                </button>
-              </SignInButton>
-            </Show>
-            <Show when="signed-in">
-              <UserButton />
-            </Show>
-          </div>
-        </nav>
+
+          <div className="w-px h-5 bg-gray-200" />
+
+          <Show when="signed-out">
+            <SignInButton>
+              <button className="px-5 py-2 rounded-full bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 active:scale-95 transition-all duration-200 shadow-sm">
+                Sign in
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
+        </div>
       </div>
     </div>
   );

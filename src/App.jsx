@@ -11,7 +11,7 @@ import axios from "axios";
 
 const App = () => {
   const [openDropDown, setOpenDropDown] = useState(false);
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState(null);
   const getLocation = async () => {
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const { latitude, longitude } = pos.coords;
@@ -27,9 +27,7 @@ const App = () => {
       }
     });
   };
-  useEffect(() => {
-    getLocation();
-  }, []);
+
   return (
     <div className=" ">
       <BrowserRouter>

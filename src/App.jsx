@@ -9,6 +9,7 @@ import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
 import SignIn from "./pages/SignIn";
 import axios from "axios";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [openDropDown, setOpenDropDown] = useState(false);
@@ -50,6 +51,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/signin" element={<SignIn />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );

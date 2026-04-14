@@ -1,111 +1,226 @@
 import { useContext, useEffect } from "react";
-import { DataContext } from "../context/DataContext";
-import { Pagination, Navigation, Autoplay } from "swiper/modules"; // ← add Autoplay
-
+import { getData } from "../context/DataContext";
+import { Autoplay, Navigation } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
-import "swiper/css/pagination";
+import Category from "./Category";
+
+const colors = [
+  { bg: "#0a0a0a", accent: "#ff6b35" },
+  { bg: "#060d18", accent: "#3b82f6" },
+  { bg: "#08060f", accent: "#a855f7" },
+  { bg: "#06100a", accent: "#22c55e" },
+  { bg: "#100808", accent: "#f43f5e" },
+];
+
 const Carousel = () => {
-  const { data } = useContext(DataContext);
-  const colors = [
-    { bg: "#1a1a2e", accent: "#e94560" },
-    { bg: "#0f3460", accent: "#e94560" },
-    { bg: "#16213e", accent: "#00b4d8" },
-    { bg: "#1b262c", accent: "#f5a623" },
-    { bg: "#2d132c", accent: "#ee4540" },
-  ];
+  const { data, fetchAllProducts } = getData();
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, []);
   return (
     <div style={{ width: "100%" }}>
       <Swiper
-        navigation={true}
-        autoplay={{ delay: 4000 }} // ← moves every 3 seconds
-        modules={[Navigation, Autoplay]} // ← add Autoplay here
-        style={{ height: "85vh" }}
+        navigation={false}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        modules={[Autoplay]}
+        style={{ height: "90vh" }}
       >
         {data &&
           data.map((product, index) => {
             const color = colors[index % colors.length];
+            const hex = color.accent;
+
             return (
               <SwiperSlide
                 key={product.id}
                 style={{
                   display: "flex",
-                  height: "100%",
-                  width: "100%",
                   background: color.bg,
-                  color: "white", // ← color.bg not colors.bg
                 }}
               >
+                {/* LEFT */}
                 <div
                   style={{
+                    width: "55%",
                     display: "flex",
-                    width: "60%",
                     flexDirection: "column",
-                    alignItems: "flex-start",
                     justifyContent: "center",
-                    gap: "20px",
-                    padding: "0 60px",
+                    padding: "0 52px",
+                    gap: "24px",
                   }}
                 >
-                  <button
+                  {/* Category */}
+                  <span
                     style={{
-                      background: color.accent,
-                      textTransform: "capitalize",
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.45)",
                     }}
-                    className="px-5 py-2 rounded-full"
                   >
                     {product.category}
-                  </button>
+                  </span>
+
+                  {/* Title */}
                   <h1
                     style={{
-                      fontSize: "35px",
-                      fontWeight: "bold",
-                      wordWrap: "wrap",
+                      fontSize: "clamp(22px, 3.2vw, 38px)",
+                      fontWeight: 700,
+                      lineHeight: 1.15,
+                      color: "white",
+                      maxWidth: "400px",
                     }}
                   >
                     {product.title}
                   </h1>
-                  <div style={{ display: "flex", gap: "20px" }}>
-                    <p className="text-gray-500 line-through font-semibold text-xl">
+
+                  {/* Accent line */}
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "2px",
+                      borderRadius: "2px",
+                      background: hex,
+                    }}
+                  />
+
+                  {/* Price */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "6px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        color: "rgba(255,255,255,0.3)",
+                        textDecoration: "line-through",
+                      }}
+                    >
                       $
                       {(
                         product.price /
                         (1 - product.discountPercentage / 100)
                       ).toFixed(2)}
-                    </p>
-                    <p
-                      className="text-3xl font-bold"
-                      style={{ color: color.accent }}
+                    </span>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "14px",
+                      }}
                     >
-                      ${product.price}
-                    </p>
+                      <span
+                        style={{
+                          fontSize: "42px",
+                          fontWeight: 800,
+                          color: hex,
+                          letterSpacing: "-1px",
+                          lineHeight: 1,
+                        }}
+                      >
+                        ${product.price}
+                      </span>
+
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          fontWeight: 700,
+                          padding: "4px 10px",
+                          borderRadius: "6px",
+                          background: `${hex}22`,
+                          color: hex,
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {product.discountPercentage.toFixed(0)}% OFF
+                      </span>
+                    </div>
                   </div>
-                  <button
-                    style={{ background: color.accent }}
-                    className=" transition-scale duration-500 px-15 py-3 rounded-full hover:brightness-110 cursor-pointer hover:scale-101 shadow-2xl shadow-black"
+
+                  {/* Buttons */}
+                  <div
+                    style={{ display: "flex", gap: "12px", marginTop: "4px" }}
                   >
-                    Shop Now
-                  </button>
+                    <button
+                      style={{
+                        padding: "13px 32px",
+                        borderRadius: "999px",
+                        border: "none",
+                        background: hex,
+                        color: "white",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        letterSpacing: "0.03em",
+                      }}
+                    >
+                      Shop Now
+                    </button>
+                    <button
+                      style={{
+                        padding: "12px 24px",
+                        borderRadius: "999px",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        background: "transparent",
+                        color: "rgba(255,255,255,0.65)",
+                        fontSize: "13px",
+                        fontWeight: 500,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
+
+                {/* RIGHT */}
                 <div
                   style={{
-                    width: "40%",
+                    width: "45%",
                     display: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
+                  {/* Glow blob */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      width: "340px",
+                      height: "340px",
+                      borderRadius: "50%",
+                      background: hex,
+                      opacity: 0.12,
+                      filter: "blur(70px)",
+                    }}
+                  />
                   <img
                     className="hover:scale-110 transition-all duration-500"
                     src={product.images[0]}
                     alt={product.description}
-                    style={{ height: " 100%", objectFit: "contain" }}
+                    style={{
+                      maxHeight: "75%",
+                      objectFit: "contain",
+                      position: "relative",
+                      zIndex: 2,
+                      filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.5))",
+                    }}
                   />
                 </div>
               </SwiperSlide>
             );
           })}
       </Swiper>
+      <Category colors={colors} />;
     </div>
   );
 };

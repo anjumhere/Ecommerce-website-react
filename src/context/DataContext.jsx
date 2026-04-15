@@ -23,9 +23,34 @@ export const DataProvider = ({ children }) => {
       console.log("Network error. Using cached data if available", error);
     }
   };
+  const [newProducts, setNewProducts] = useState();
+  const fetchNewProducts = async () => {
+    try {
+      const res = await axios.get(
+        "https://fakestoreapi.com/products/category/electronics",
+      );
+      const products = res.data;
+      setNewProducts(products);
 
+      console.log(newProducts);
+    } catch (er) {
+      console.log(er);
+    }
+  };
+  useEffect(() => {
+    fetchNewProducts();
+  }, []);
   return (
-    <DataContext.Provider value={{ data, setData, fetchAllProducts }}>
+    <DataContext.Provider
+      value={{
+        data,
+        setData,
+        fetchAllProducts,
+        newProducts,
+        setNewProducts,
+        fetchNewProducts,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

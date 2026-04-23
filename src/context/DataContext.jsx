@@ -37,9 +37,7 @@ export const DataProvider = ({ children }) => {
       console.log(er);
     }
   };
-  useEffect(() => {
-    fetchNewProducts();
-  }, []);
+
   return (
     <DataContext.Provider
       value={{

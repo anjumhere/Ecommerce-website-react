@@ -9,28 +9,66 @@ const Products = () => {
   }, []);
 
   const [toggleFilter, setToggleFilter] = useState(false);
-  const [item, setItem] = useState();
-  const [price, setPrice] = useState();
+  const [selectedCategories, setSelectedCategories] = useState([]); // ← Fixed: renamed from 'item'
+  const [selectedPrices, setSelectedPrices] = useState([]); // ← Fixed: removed duplicate 'price' state
+  const [storeProduct, setStoreProduct] = useState([]);
   const toggleButton = () => {
     setToggleFilter(!toggleFilter);
   };
 
+  console.log(storeProduct);
+
   const categories = [
-    "Electronics",
-    "Cameras",
+    "electronics",
+    "Hard drive",
     "Gaming",
-    "Appliances",
-    "Speakers",
-    "Power Banks",
+    "appliances",
+    "speakers",
+    "power banks",
   ];
-  const priceRange = [100, 200, 400, 500, 1000, 1200];
+
+  const priceOptions = [100, 200, 400, 500, 1000, 1200];
 
   const limitWords = (text, maxWords) => {
     if (!text) return "";
     const words = text.split(" ");
-
     return words.slice(0, maxWords).join(" ") + "...";
   };
+
+  const handlePriceSelect = (priceValue) => {
+    setSelectedPrices((prev) => {
+      if (prev.includes(priceValue)) {
+        return prev.filter((i) => i !== priceValue);
+      } else {
+        return [...prev, priceValue];
+      }
+    });
+  };
+
+  // ← FIXED: Added missing return statement and fixed parameter name
+  const matchesPriceFilter = (productPrice) => {
+    return (
+      selectedPrices.length === 0 ||
+      selectedPrices.some((selectedPrice) => productPrice <= selectedPrice)
+    );
+  };
+
+  // ← FIXED: Changed 'products' to 'product' for consistency
+  const filteredProducts = newProducts?.filter((product) => {
+    // Category filter - FIXED: using selectedCategories instead of undefined variable
+    const categoryMatch =
+      selectedCategories.length === 0 ||
+      selectedCategories.some((category) =>
+        product.description.toLowerCase().includes(category.toLowerCase()),
+      );
+
+    // Price filter logic
+    const priceMatch = matchesPriceFilter(product.price);
+
+    // Product must match BOTH filters
+    return categoryMatch && priceMatch;
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6 p-4">
       {/* Filter Sidebar */}
@@ -60,13 +98,19 @@ const Products = () => {
                     <input
                       type="checkbox"
                       onChange={() => {
-                        setItem(cat);
+                        if (selectedCategories.includes(cat)) {
+                          setSelectedCategories(
+                            selectedCategories.filter((c) => c !== cat),
+                          );
+                        } else {
+                          setSelectedCategories([...selectedCategories, cat]);
+                        }
                       }}
                       name="category-products"
-                      checked={item === cat}
+                      checked={selectedCategories.includes(cat)}
                       className="w-3.5 h-3.5 rounded accent-red-500 checked:shadow-lg checked:shadow-red-500/80 cursor-pointer"
                     />
-                    <p className="font-normal text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                    <p className="font-normal text-sm text-gray-600 capitalize group-hover:text-gray-900 transition-colors">
                       {cat}
                     </p>
                   </label>
@@ -82,21 +126,20 @@ const Products = () => {
             PRICES
           </h1>
           <div className="flex gap-2 flex-wrap">
-            {priceRange.map((priceValue) => {
+            {priceOptions.map((priceValue) => {
               return (
                 <button
                   key={priceValue}
-                  value={priceValue}
-                  onClick={() => setPrice(priceValue)}
+                  onClick={() => handlePriceSelect(priceValue)}
                   className={`text-xs px-3 py-1.5 border rounded-full transition-all duration-200 cursor-pointer font-medium
-    ${
-      price === priceValue
-        ? "bg-red-300   border-red-500   "
-        : "border-gray-200 text-gray-600 bg-white hover:text-gray-800 hover:border-gray-300 hover:bg-gray-50"
-    }
-  `}
+                  ${
+                    selectedPrices.includes(priceValue)
+                      ? "bg-red-500 text-white border-red-500"
+                      : "border-gray-200 text-gray-600 bg-white hover:border-gray-300"
+                  }
+                  `}
                 >
-                  ${priceValue}
+                  ${priceValue}+
                 </button>
               );
             })}
@@ -105,56 +148,63 @@ const Products = () => {
       </aside>
 
       {/* Products Grid */}
-      <main className="bg-white shadow-xl p-6 rounded-xl min-h-[500px] border border-gray-100">
-        <div className="flex gap-6 flex-wrap justify-start items-stretch">
-          {newProducts &&
-            newProducts.map((product) => {
+      <main className="flex-1">
+        <div className="flex flex-wrap gap-7">
+          {filteredProducts && filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => {
               const originalPrice = (product.price / 0.8).toFixed(2);
 
               return (
                 <div
                   key={product.id}
-                  className="flex flex-col relative w-[330px] h-[300px] bg-white rounded-xl border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group overflow-hidden"
+                  className="group hover:shadow-2xl relative bg-white rounded-2xl overflow-hidden transition-all duration-400 hover:-translate-y-1 w-[calc(33.333%-20px)] min-w-65"
                 >
-                  {/* Image Section */}
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 flex justify-center items-center h-[70%] w-full">
+                  <div className="bg-gray-50 flex justify-evenly items-center h-64 w-full overflow-hidden">
                     <img
-                      className="object-contain transition-transform duration-300 group-hover:scale-105"
-                      style={{ height: "80%", width: "80%" }}
+                      className="object-contain transition-all duration-500 group-hover:scale-105"
+                      style={{ height: "70%", width: "70%" }}
                       src={product.image}
                       alt={product.title}
                     />
                   </div>
 
-                  {/* Content Section */}
-                  <div className="flex flex-col justify-between p-3 h-[30%] w-full bg-white">
-                    <h1 className="text-xs font-medium text-gray-600 cursor-pointer hover:text-blue-500 transition-colors truncate">
-                      {limitWords(product.title, 6)}
+                  <div className="p-5 pt-4">
+                    <h1 className="text-sm font-normal text-gray-600 leading-relaxed line-clamp-2 min-h-10.5 group-hover:text-gray-900 transition-colors duration-200">
+                      {limitWords(product.title, 70)}
                     </h1>
 
-                    <div className="flex justify-between items-center mt-1">
+                    <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-50">
                       <div className="flex items-baseline gap-2">
-                        <p className="text-gray-400 text-sm font-medium line-through">
+                        <p className="text-gray-400 text-xs line-through">
                           ${originalPrice}
                         </p>
-                        <p className="text-xl font-bold text-blue-600">
+                        <p className="text-xl font-medium text-gray-900">
                           ${product.price}
                         </p>
                       </div>
 
-                      <button className="px-4 py-1.5 rounded-lg cursor-pointer bg-white border-2 border-blue-500 text-blue-600 text-sm font-semibold hover:bg-blue-500 hover:text-white hover:shadow-md transition-all duration-200">
+                      <button
+                        onClick={setStoreProduct(product)}
+                        className="px-8 cursor-pointer border border-gray-500 py-2 rounded-lg bg-transparent text-gray-600 text-sm font-medium transition-all duration-200 hover:bg-gray-900 hover:text-white"
+                      >
                         Buy
                       </button>
                     </div>
                   </div>
 
-                  {/* Discount Badge */}
-                  <div className="absolute top-3 right-3 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-md px-2 py-0.5 text-[10px] font-bold tracking-wide shadow-sm">
+                  <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded-md text-[10px] font-medium text-gray-500 shadow-sm border border-white/50">
                     20% OFF
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="text-center w-full py-12">
+              <p className="text-gray-500">
+                No products found matching your filters
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>

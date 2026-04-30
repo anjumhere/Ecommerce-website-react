@@ -31,8 +31,6 @@ export const DataProvider = ({ children }) => {
       );
       const products = res.data;
       setNewProducts(products);
-
-      console.log(newProducts);
     } catch (er) {
       console.log(er);
     }

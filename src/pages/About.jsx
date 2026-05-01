@@ -76,23 +76,31 @@ const FadeIn = ({ children, delay = 0, className = "" }) => {
   );
 };
 
-const About = () => {
+const About = ({ theme }) => {
   const [heroVisible, setHeroVisible] = useState(false);
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
+  const bg = isDark ? "#0a0a0a" : "#fff";
+  const text = isDark ? "#f5f5f5" : "#0a0a0a";
+  const subtext = isDark ? "#888" : "#555";
+  const cardBg = isDark ? "#111" : "#f9f9f9";
+  const cardBorder = isDark ? "#222" : "#eee";
+
   return (
     <div
       style={{
         fontFamily: "'Georgia', serif",
-        color: "#111",
-        background: "#fff",
+        color: text,
+        background: bg,
+        transition: "background 0.3s, color 0.3s",
       }}
     >
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section
         style={{
           minHeight: "88vh",
@@ -104,10 +112,8 @@ const About = () => {
           padding: "80px 24px 60px",
           position: "relative",
           overflow: "hidden",
-          background: "#fff",
         }}
       >
-        {/* decorative bg circle */}
         <div
           style={{
             position: "absolute",
@@ -140,12 +146,14 @@ const About = () => {
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? "translateY(0)" : "translateY(32px)",
             transition: "opacity 0.7s ease, transform 0.7s ease",
+            maxWidth: "800px",
+            width: "100%",
           }}
         >
           <p
             style={{
               fontSize: "12px",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "sans-serif",
               letterSpacing: "4px",
               textTransform: "uppercase",
               color: "#ef4444",
@@ -155,46 +163,36 @@ const About = () => {
           >
             Our Story
           </p>
-
           <h1
             style={{
-              fontSize: "clamp(42px, 7vw, 80px)",
+              fontSize: "clamp(36px, 7vw, 80px)",
               fontWeight: 700,
               lineHeight: 1.1,
               letterSpacing: "-2px",
-              color: "#0a0a0a",
+              color: text,
               maxWidth: "780px",
               margin: "0 auto 28px",
             }}
           >
             We built{" "}
-            <span
-              style={{
-                color: "#ef4444",
-                fontStyle: "italic",
-                fontFamily: "'Georgia', serif",
-              }}
-            >
+            <span style={{ color: "#ef4444", fontStyle: "italic" }}>
               Cartzy
             </span>{" "}
             for everyone.
           </h1>
-
           <p
             style={{
-              fontSize: "18px",
-              fontFamily: "'Helvetica Neue', sans-serif",
-              color: "#555",
+              fontSize: "clamp(15px, 2vw, 18px)",
+              fontFamily: "sans-serif",
+              color: subtext,
               maxWidth: "560px",
               margin: "0 auto 40px",
               lineHeight: 1.7,
-              fontWeight: 400,
             }}
           >
             A simple idea — bring the best electronics and accessories to your
             doorstep, at prices that actually make sense.
           </p>
-
           <div
             style={{
               display: "flex",
@@ -212,9 +210,8 @@ const About = () => {
                 borderRadius: "50px",
                 textDecoration: "none",
                 fontSize: "14px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "sans-serif",
                 fontWeight: 600,
-                letterSpacing: "0.5px",
                 transition: "background 0.2s",
               }}
               onMouseEnter={(e) => (e.target.style.background = "#ef4444")}
@@ -227,14 +224,13 @@ const About = () => {
               style={{
                 padding: "14px 32px",
                 background: "transparent",
-                color: "#0a0a0a",
+                color: text,
                 borderRadius: "50px",
                 textDecoration: "none",
                 fontSize: "14px",
-                fontFamily: "'Helvetica Neue', sans-serif",
+                fontFamily: "sans-serif",
                 fontWeight: 600,
                 border: "1.5px solid #ddd",
-                letterSpacing: "0.5px",
                 transition: "border-color 0.2s, color 0.2s",
               }}
               onMouseEnter={(e) => {
@@ -243,7 +239,7 @@ const About = () => {
               }}
               onMouseLeave={(e) => {
                 e.target.style.borderColor = "#ddd";
-                e.target.style.color = "#0a0a0a";
+                e.target.style.color = text;
               }}
             >
               Contact Us
@@ -251,7 +247,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* scroll indicator */}
         <div
           style={{
             position: "absolute",
@@ -270,6 +265,7 @@ const About = () => {
               fontFamily: "sans-serif",
               letterSpacing: "2px",
               textTransform: "uppercase",
+              color: subtext,
             }}
           >
             Scroll
@@ -285,14 +281,14 @@ const About = () => {
         </div>
       </section>
 
-      {/* ── STATS ── */}
+      {/* STATS */}
       <section style={{ background: "#0a0a0a", padding: "64px 24px" }}>
         <div
           style={{
             maxWidth: "1000px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
             gap: "40px",
           }}
         >
@@ -301,7 +297,7 @@ const About = () => {
               <div style={{ textAlign: "center" }}>
                 <p
                   style={{
-                    fontSize: "clamp(36px, 5vw, 52px)",
+                    fontSize: "clamp(32px, 5vw, 52px)",
                     fontWeight: 700,
                     color: "#ef4444",
                     margin: "0 0 6px",
@@ -312,8 +308,8 @@ const About = () => {
                 </p>
                 <p
                   style={{
-                    fontSize: "13px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontSize: "12px",
+                    fontFamily: "sans-serif",
                     color: "#888",
                     letterSpacing: "2px",
                     textTransform: "uppercase",
@@ -328,14 +324,14 @@ const About = () => {
         </div>
       </section>
 
-      {/* ── MISSION ── */}
+      {/* MISSION */}
       <section
-        style={{ padding: "100px 24px", maxWidth: "1100px", margin: "0 auto" }}
+        style={{ padding: "80px 24px", maxWidth: "1100px", margin: "0 auto" }}
       >
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "60px",
             alignItems: "center",
           }}
@@ -356,11 +352,11 @@ const About = () => {
             </p>
             <h2
               style={{
-                fontSize: "clamp(30px, 4vw, 46px)",
+                fontSize: "clamp(26px, 4vw, 46px)",
                 fontWeight: 700,
                 lineHeight: 1.15,
                 letterSpacing: "-1px",
-                color: "#0a0a0a",
+                color: text,
                 marginBottom: "24px",
               }}
             >
@@ -368,9 +364,9 @@ const About = () => {
             </h2>
             <p
               style={{
-                fontSize: "16px",
-                fontFamily: "'Helvetica Neue', sans-serif",
-                color: "#555",
+                fontSize: "15px",
+                fontFamily: "sans-serif",
+                color: subtext,
                 lineHeight: 1.8,
                 marginBottom: "16px",
               }}
@@ -381,9 +377,9 @@ const About = () => {
             </p>
             <p
               style={{
-                fontSize: "16px",
-                fontFamily: "'Helvetica Neue', sans-serif",
-                color: "#555",
+                fontSize: "15px",
+                fontFamily: "sans-serif",
+                color: subtext,
                 lineHeight: 1.8,
               }}
             >
@@ -392,21 +388,20 @@ const About = () => {
             </p>
           </FadeIn>
 
-          {/* visual block */}
           <FadeIn delay={0.2}>
             <div style={{ position: "relative" }}>
               <div
                 style={{
-                  background: "#f9f9f9",
+                  background: cardBg,
                   borderRadius: "24px",
-                  padding: "48px 40px",
-                  border: "1px solid #eee",
+                  padding: "40px 32px",
+                  border: `1px solid ${cardBorder}`,
                 }}
               >
                 <div
                   style={{
-                    fontSize: "64px",
-                    marginBottom: "20px",
+                    fontSize: "56px",
+                    marginBottom: "16px",
                     lineHeight: 1,
                   }}
                 >
@@ -414,9 +409,9 @@ const About = () => {
                 </div>
                 <h3
                   style={{
-                    fontSize: "22px",
+                    fontSize: "20px",
                     fontWeight: 700,
-                    color: "#0a0a0a",
+                    color: text,
                     marginBottom: "12px",
                     letterSpacing: "-0.5px",
                   }}
@@ -436,9 +431,9 @@ const About = () => {
                       alignItems: "center",
                       gap: "10px",
                       marginBottom: "10px",
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      fontFamily: "sans-serif",
                       fontSize: "14px",
-                      color: "#444",
+                      color: subtext,
                     }}
                   >
                     <span
@@ -462,30 +457,21 @@ const About = () => {
                   </div>
                 ))}
               </div>
-              {/* decorative accent */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: "-16px",
-                  right: "-16px",
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  background: "#ef4444",
-                  opacity: 0.12,
-                  zIndex: -1,
-                }}
-              />
             </div>
           </FadeIn>
         </div>
       </section>
 
-      {/* ── VALUES ── */}
-      <section style={{ background: "#fafafa", padding: "100px 24px" }}>
+      {/* VALUES */}
+      <section
+        style={{
+          background: isDark ? "#111" : "#fafafa",
+          padding: "80px 24px",
+        }}
+      >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <FadeIn>
-            <div style={{ textAlign: "center", marginBottom: "60px" }}>
+            <div style={{ textAlign: "center", marginBottom: "52px" }}>
               <p
                 style={{
                   fontSize: "11px",
@@ -501,32 +487,31 @@ const About = () => {
               </p>
               <h2
                 style={{
-                  fontSize: "clamp(28px, 4vw, 42px)",
+                  fontSize: "clamp(26px, 4vw, 42px)",
                   fontWeight: 700,
                   letterSpacing: "-1px",
-                  color: "#0a0a0a",
+                  color: text,
                 }}
               >
                 Our Core Values
               </h2>
             </div>
           </FadeIn>
-
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: "24px",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "20px",
             }}
           >
             {values.map((v, i) => (
               <FadeIn key={v.title} delay={i * 0.1}>
                 <div
                   style={{
-                    background: "#fff",
-                    border: "1px solid #eee",
+                    background: isDark ? "#1a1a1a" : "#fff",
+                    border: `1px solid ${cardBorder}`,
                     borderRadius: "20px",
-                    padding: "36px 28px",
+                    padding: "32px 24px",
                     transition:
                       "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
                     cursor: "default",
@@ -534,34 +519,34 @@ const About = () => {
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-6px)";
                     e.currentTarget.style.boxShadow =
-                      "0 20px 40px rgba(0,0,0,0.07)";
+                      "0 20px 40px rgba(0,0,0,0.1)";
                     e.currentTarget.style.borderColor = "#ef4444";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
                     e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.borderColor = "#eee";
+                    e.currentTarget.style.borderColor = cardBorder;
                   }}
                 >
-                  <div style={{ fontSize: "36px", marginBottom: "16px" }}>
+                  <div style={{ fontSize: "32px", marginBottom: "14px" }}>
                     {v.icon}
                   </div>
                   <h3
                     style={{
-                      fontSize: "17px",
+                      fontSize: "16px",
                       fontWeight: 700,
-                      color: "#0a0a0a",
-                      marginBottom: "10px",
-                      fontFamily: "'Helvetica Neue', sans-serif",
+                      color: text,
+                      marginBottom: "8px",
+                      fontFamily: "sans-serif",
                     }}
                   >
                     {v.title}
                   </h3>
                   <p
                     style={{
-                      fontSize: "14px",
-                      fontFamily: "'Helvetica Neue', sans-serif",
-                      color: "#666",
+                      fontSize: "13px",
+                      fontFamily: "sans-serif",
+                      color: subtext,
                       lineHeight: 1.7,
                       margin: 0,
                     }}
@@ -575,12 +560,12 @@ const About = () => {
         </div>
       </section>
 
-      {/* ── TEAM ── */}
+      {/* TEAM */}
       <section
-        style={{ padding: "100px 24px", maxWidth: "1100px", margin: "0 auto" }}
+        style={{ padding: "80px 24px", maxWidth: "1100px", margin: "0 auto" }}
       >
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <div style={{ textAlign: "center", marginBottom: "52px" }}>
             <p
               style={{
                 fontSize: "11px",
@@ -596,24 +581,23 @@ const About = () => {
             </p>
             <h2
               style={{
-                fontSize: "clamp(28px, 4vw, 42px)",
+                fontSize: "clamp(26px, 4vw, 42px)",
                 fontWeight: 700,
                 letterSpacing: "-1px",
-                color: "#0a0a0a",
+                color: text,
               }}
             >
               Meet the Builder
             </h2>
           </div>
         </FadeIn>
-
         <div style={{ display: "flex", justifyContent: "center" }}>
           {team.map((member, i) => (
             <FadeIn key={member.name} delay={i * 0.1}>
               <div
                 style={{
-                  background: "#fff",
-                  border: "1px solid #eee",
+                  background: isDark ? "#111" : "#fff",
+                  border: `1px solid ${cardBorder}`,
                   borderRadius: "24px",
                   padding: "48px 56px",
                   textAlign: "center",
@@ -623,7 +607,7 @@ const About = () => {
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-6px)";
                   e.currentTarget.style.boxShadow =
-                    "0 24px 48px rgba(0,0,0,0.08)";
+                    "0 24px 48px rgba(0,0,0,0.1)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
@@ -643,7 +627,7 @@ const About = () => {
                     fontWeight: 700,
                     color: "#fff",
                     margin: "0 auto 20px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
+                    fontFamily: "sans-serif",
                   }}
                 >
                   {member.initials}
@@ -652,7 +636,7 @@ const About = () => {
                   style={{
                     fontSize: "20px",
                     fontWeight: 700,
-                    color: "#0a0a0a",
+                    color: text,
                     marginBottom: "6px",
                     letterSpacing: "-0.3px",
                   }}
@@ -661,9 +645,9 @@ const About = () => {
                 </h3>
                 <p
                   style={{
-                    fontSize: "13px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
-                    color: "#888",
+                    fontSize: "12px",
+                    fontFamily: "sans-serif",
+                    color: subtext,
                     marginBottom: "20px",
                     letterSpacing: "1px",
                     textTransform: "uppercase",
@@ -680,12 +664,12 @@ const About = () => {
                     alignItems: "center",
                     gap: "8px",
                     padding: "10px 24px",
-                    border: "1.5px solid #ddd",
+                    border: `1.5px solid ${cardBorder}`,
                     borderRadius: "50px",
                     textDecoration: "none",
                     fontSize: "13px",
-                    fontFamily: "'Helvetica Neue', sans-serif",
-                    color: "#444",
+                    fontFamily: "sans-serif",
+                    color: subtext,
                     fontWeight: 600,
                     transition: "all 0.2s",
                   }}
@@ -696,13 +680,13 @@ const About = () => {
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "#444";
-                    e.currentTarget.style.borderColor = "#ddd";
+                    e.currentTarget.style.color = subtext;
+                    e.currentTarget.style.borderColor = cardBorder;
                   }}
                 >
                   <svg
-                    width="16"
-                    height="16"
+                    width="15"
+                    height="15"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
@@ -716,7 +700,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section
         style={{
           background: "#0a0a0a",
@@ -740,7 +724,7 @@ const About = () => {
           </p>
           <h2
             style={{
-              fontSize: "clamp(32px, 5vw, 56px)",
+              fontSize: "clamp(28px, 5vw, 56px)",
               fontWeight: 700,
               color: "#fff",
               letterSpacing: "-1.5px",
@@ -752,10 +736,9 @@ const About = () => {
           </h2>
           <p
             style={{
-              fontSize: "16px",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontSize: "15px",
+              fontFamily: "sans-serif",
               color: "#888",
-              marginBottom: "40px",
               maxWidth: "480px",
               margin: "0 auto 40px",
               lineHeight: 1.7,
@@ -774,7 +757,7 @@ const About = () => {
               borderRadius: "50px",
               textDecoration: "none",
               fontSize: "15px",
-              fontFamily: "'Helvetica Neue', sans-serif",
+              fontFamily: "sans-serif",
               fontWeight: 700,
               letterSpacing: "0.5px",
               transition: "background 0.2s, transform 0.2s",
@@ -795,7 +778,7 @@ const About = () => {
 
       <style>{`
         @keyframes scrollPulse {
-          0%, 100% { opacity: 0.2; transform: scaleY(0.6); transform-origin: top; }
+          0%, 100% { opacity: 0.2; transform: scaleY(0.6) ; transform-origin: top; }
           50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
         }
       `}</style>

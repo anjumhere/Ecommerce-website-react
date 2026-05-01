@@ -3,12 +3,12 @@ import Carousel from "../components/Carousel";
 import MidBanner from "../components/MidBanner";
 import FeaturesSection from "../components/FeaturesSection";
 
-const Home = () => {
+const Home = ({ theme }) => {
   return (
     <>
-      <Carousel />
-      <MidBanner />
-      <FeaturesSection />
+      <Carousel theme={theme} />
+      <MidBanner theme={theme} />
+      <FeaturesSection theme={theme} />
     </>
   );
 };

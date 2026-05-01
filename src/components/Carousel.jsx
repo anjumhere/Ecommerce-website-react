@@ -4,6 +4,7 @@ import { Autoplay } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
 import Category from "./Category";
+import { useNavigate } from "react-router-dom";
 
 const colors = [
   { bg: "#0a0a0a", accent: "#ff6b35" },
@@ -31,6 +32,7 @@ const Carousel = ({ theme }) => {
     fetchAllProducts();
   }, []);
 
+  const navigate = useNavigate();
   return (
     <div style={{ width: "100%", overflow: "hidden" }}>
       <Swiper
@@ -272,7 +274,7 @@ const Carousel = ({ theme }) => {
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.filter = "brightness(1)")
                       }
-                      onClick={() => (window.location.href = "/products")}
+                      onClick={() => navigate("/products")}
                     >
                       Shop Now
                     </button>

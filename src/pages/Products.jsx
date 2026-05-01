@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { getData } from "../context/DataContext";
-import { useNavigate } from "react-router-dom";
 
 const Products = () => {
-  const { newProducts, fetchNewProducts } = getData();
+  const { newProducts, fetchNewProducts, addToCart } = getData();
 
   const stableFetch = useCallback(fetchNewProducts, []); // eslint-disable-line
   useEffect(() => {
@@ -13,10 +12,6 @@ const Products = () => {
   const [toggleFilter, setToggleFilter] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
-  const [storeProduct, setStoreProduct] = useState([]);
-
-  // Toast state: shows a brief "Added to cart!" confirmation per product
-  const [toastId, setToastId] = useState(null);
 
   const toggleButton = () => setToggleFilter((prev) => !prev);
 
@@ -29,16 +24,8 @@ const Products = () => {
     "power banks",
   ];
 
-  // Price thresholds: the filter keeps products whose price is AT OR BELOW
-  // the selected value. Labels now read "Under $X" to match the actual logic.
-  // FIX #4: The original labels said "$100+" which implies ">= $100", but the
-  //         filter used `productPrice <= selectedPrice` (i.e. "under $100").
-  //         Labels are corrected to "Under $X" so UI and logic are consistent.
   const priceOptions = [100, 200, 400, 500, 1000, 1200];
 
-  // FIX #5: `limitWords` was called with maxWords = 70, which is almost the
-  //         entire product description and defeats the purpose of truncation.
-  //         Changed to 9 words — enough for a readable card title.
   const limitWords = (text, maxWords = 9) => {
     if (!text) return "";
     const words = text.split(" ");
@@ -68,53 +55,8 @@ const Products = () => {
     return categoryMatch && priceMatch;
   });
 
-  const navigate = useNavigate();
-
-  // KEY FIX: handleBuy now only adds the item to the cart state.
-  // It no longer calls navigate() — the user stays on the Products page
-  // and can go to cart whenever they want via the cart icon in the header.
-  const handleBuy = (product) => {
-    setStoreProduct((prev) => [...prev, product]);
-    // Show a per-product toast for 1.5 seconds
-    setToastId(product.id);
-    setTimeout(() => setToastId(null), 1500);
-  };
-
-  const handleGoToCart = () => {
-    navigate("/cart", { state: { cartItems: storeProduct } });
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6 p-4">
-      {/* Floating Cart Button — always visible, navigates to cart on click */}
-      <button
-        onClick={handleGoToCart}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-2xl hover:bg-gray-700 transition-all duration-200 cursor-pointer"
-        aria-label="Go to cart"
-      >
-        {/* Cart SVG icon */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-5 h-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8h13.2M7 13L5.4 5M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-          />
-        </svg>
-        <span className="text-sm font-medium">Cart</span>
-        {/* Badge showing item count */}
-        {storeProduct.length > 0 && (
-          <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center ml-1">
-            {storeProduct.length}
-          </span>
-        )}
-      </button>
       {/* Filter Sidebar */}
       <aside className="p-5 shadow-lg rounded-xl bg-white border border-gray-100">
         {/* Categories Section */}
@@ -173,7 +115,6 @@ const Products = () => {
               <button
                 key={priceValue}
                 onClick={() => handlePriceSelect(priceValue)}
-                // FIX #4 (label): Changed "$X+" → "Under $X" to match filter logic
                 className={`text-xs px-3 py-1.5 border rounded-full transition-all duration-200 cursor-pointer font-medium ${
                   selectedPrices.includes(priceValue)
                     ? "bg-red-500 text-white border-red-500"
@@ -197,10 +138,6 @@ const Products = () => {
               return (
                 <div
                   key={product.id}
-                  // FIX #7: `duration-400` is not a valid Tailwind class.
-                  //         Changed to `duration-300` (the nearest valid value).
-                  // FIX #8: `min-w-65` is not standard Tailwind; changed to
-                  //         `min-w-[260px]` (arbitrary value syntax).
                   className="group hover:shadow-2xl relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 w-[calc(33.333%-20px)] min-w-[260px]"
                 >
                   <div className="bg-gray-50 flex justify-evenly items-center h-64 w-full overflow-hidden">
@@ -213,8 +150,6 @@ const Products = () => {
                   </div>
 
                   <div className="p-5 pt-4">
-                    {/* FIX #9: `min-h-10.5` is not standard Tailwind; replaced
-                                with `min-h-[42px]` (arbitrary value). */}
                     <h2 className="text-sm font-normal text-gray-600 leading-relaxed line-clamp-2 min-h-[42px] group-hover:text-gray-900 transition-colors duration-200">
                       {limitWords(product.title)}
                     </h2>
@@ -228,16 +163,13 @@ const Products = () => {
                           ${product.price}
                         </p>
                       </div>
-
                       <button
-                        onClick={() => handleBuy(product)}
-                        className={`px-4 cursor-pointer border py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          toastId === product.id
-                            ? "bg-green-500 border-green-500 text-white"
-                            : "border-gray-500 bg-transparent text-gray-600 hover:bg-gray-900 hover:text-white"
-                        }`}
+                        onClick={() => {
+                          addToCart(product);
+                        }}
+                        className="border border-gray-400 rounded-lg px-7 py-1 font-semibold cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:border-black"
                       >
-                        {toastId === product.id ? "✓ Added!" : "Add to Cart"}
+                        Buy
                       </button>
                     </div>
                   </div>

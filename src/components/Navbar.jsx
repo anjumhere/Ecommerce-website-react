@@ -4,6 +4,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { Show, SignInButton, UserButton } from "@clerk/react";
 import { CgClose } from "react-icons/cg";
+import { getData } from "../context/DataContext";
 
 const Navbar = ({
   userLocation,
@@ -15,6 +16,7 @@ const Navbar = ({
     setOpenDropDown(!openDropDown);
   };
 
+  const { cartItems } = getData();
   return (
     <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 h-20">
@@ -144,7 +146,7 @@ const Navbar = ({
           >
             <FaCartShopping className="h-5 w-5 text-gray-600 group-hover:text-red-500 transition-colors" />
             <span className="bg-red-500 rounded-full w-5 h-5 font-bold text-[10px] text-white flex justify-center items-center absolute -top-1 -right-1 border-2 border-white shadow-sm">
-              0
+              <p>{cartItems.length}</p>
             </span>
           </Link>
 

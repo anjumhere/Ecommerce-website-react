@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const stats = [
   { value: "10K+", label: "Happy Customers" },
@@ -90,7 +91,7 @@ const About = ({ theme }) => {
   const subtext = isDark ? "#888" : "#555";
   const cardBg = isDark ? "#111" : "#f9f9f9";
   const cardBorder = isDark ? "#222" : "#eee";
-
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -216,6 +217,7 @@ const About = ({ theme }) => {
               }}
               onMouseEnter={(e) => (e.target.style.background = "#ef4444")}
               onMouseLeave={(e) => (e.target.style.background = "#0a0a0a")}
+              onClick={() => navigate("/products")}
             >
               Shop Now
             </a>

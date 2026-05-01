@@ -85,7 +85,7 @@ const Cart = ({ theme }) => {
                 </div>
                 {i < 2 && (
                   <div
-                    className={`flex-1 h-[2px] mx-2 mb-5 ${isDark ? "bg-white/10" : "bg-gray-200"}`}
+                    className={`flex-1 h-0.5 mx-2 mb-5 ${isDark ? "bg-white/10" : "bg-gray-200"}`}
                   />
                 )}
               </React.Fragment>
@@ -149,7 +149,7 @@ const Cart = ({ theme }) => {
                         <RiSubtractLine size={15} />
                       </button>
                       <span
-                        className={`px-4 py-1 font-bold text-center min-w-[40px] ${text}`}
+                        className={`px-4 py-1 font-bold text-center min-w-10 ${text}`}
                       >
                         {item.quantity || 1}
                       </span>

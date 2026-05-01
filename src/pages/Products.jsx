@@ -204,7 +204,7 @@ const Products = ({ theme }) => {
                       </div>
 
                       <div
-                        className={`flex justify-center items-center h-52 w-full p-5 ${isDark ? "bg-white/5" : "bg-gray-50"}`}
+                        className={`flex justify-center items-center h-52 w-full p-5 ${isDark ? "bg-white/15" : "bg-gray-50"}`}
                       >
                         <img
                           className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"

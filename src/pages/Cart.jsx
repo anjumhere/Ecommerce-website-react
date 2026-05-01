@@ -12,7 +12,7 @@ import { getData } from "../context/DataContext";
 const Cart = ({ theme }) => {
   const { cartItems, updateQuantity, removeFromCart } = getData();
   const isDark = theme === "dark";
-
+  console.log(cartItems);
   // FIX: was `acc * item.price` — now correctly sums price × quantity
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * (item.quantity || 1),

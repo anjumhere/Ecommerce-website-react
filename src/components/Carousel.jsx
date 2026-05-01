@@ -272,6 +272,7 @@ const Carousel = ({ theme }) => {
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.filter = "brightness(1)")
                       }
+                      onClick={() => (window.location.href = "/products")}
                     >
                       Shop Now
                     </button>

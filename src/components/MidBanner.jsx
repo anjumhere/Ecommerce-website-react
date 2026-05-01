@@ -26,7 +26,10 @@ const MidBanner = () => {
           Discover the tech innovations with unbeatable prices and free shipping
           on all orders.
         </p>
-        <button className="px-6 sm:px-8 md:px-9 py-2 sm:py-2.5 md:py-3 rounded-full md:rounded-lg bg-red-500 text-white text-sm sm:text-base hover:bg-red-600 active:scale-95 cursor-pointer transition-all duration-200 shadow-lg shadow-red-500/30">
+        <button
+          onClick={() => (window.location.href = "/products")}
+          className="px-6 sm:px-8 md:px-9 py-2 sm:py-2.5 md:py-3 rounded-full md:rounded-lg bg-red-500 text-white text-sm sm:text-base hover:bg-red-600 active:scale-95 cursor-pointer transition-all duration-200 shadow-lg shadow-red-500/30"
+        >
           Shop Now
         </button>
       </div>

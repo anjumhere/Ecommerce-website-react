@@ -37,7 +37,7 @@ const Carousel = ({ theme }) => {
     <div style={{ width: "100%", overflow: "hidden" }}>
       <Swiper
         navigation={false}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
         modules={[Autoplay]}
         style={{ height: isMobile ? "100svh" : "90vh" }}
       >
@@ -109,7 +109,7 @@ const Carousel = ({ theme }) => {
                           width: "140px",
                           height: "140px",
                           borderRadius: "50%",
-                          border: `2px solid ${hex}`,
+                          border: `2px solid transparent`,
                           opacity: 0.1,
                           pointerEvents: "none",
                         }}
@@ -122,7 +122,7 @@ const Carousel = ({ theme }) => {
                           width: "80px",
                           height: "80px",
                           borderRadius: "50%",
-                          border: `2px solid ${hex}`,
+                          border: `2px solid transparent`,
                           opacity: 0.1,
                           pointerEvents: "none",
                         }}

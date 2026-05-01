@@ -215,7 +215,7 @@ const Products = ({ theme }) => {
 
                       <div className="p-5 pt-4">
                         <h2
-                          className={`text-sm font-semibold leading-relaxed line-clamp-2 min-h-[42px] transition-colors ${
+                          className={`text-sm font-semibold leading-relaxed line-clamp-2 min-h-10.5 transition-colors ${
                             isDark
                               ? "text-gray-200 group-hover:text-white"
                               : "text-gray-700 group-hover:text-gray-900"

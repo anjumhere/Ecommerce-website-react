@@ -1,8 +1,16 @@
 import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 const Contact = ({ theme }) => {
   const isDark = theme === "dark";
   const [activeType, setActiveType] = useState("General inquiry");
+  const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    message: "",
+  });
 
   const bg = isDark ? "bg-[#0a0a0a]" : "bg-white";
   const text = isDark ? "text-white" : "text-gray-900";
@@ -13,6 +21,37 @@ const Contact = ({ theme }) => {
       : "bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400"
   }`;
 
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
+
+    const templateParams = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      message: formData.message,
+      inquiry_type: activeType,
+    };
+
+    try {
+      await emailjs.send(
+        "service_bweom95",
+        "template_eecn7ze",
+        templateParams,
+        "LPtnNkcjxbu5gPrft",
+      );
+      setStatus("success");
+      setFormData({ first_name: "", last_name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS error:", error);
+      setStatus("error");
+    }
+  };
+
   return (
     <section
       className={`px-4 sm:px-8 py-10 lg:py-16 min-h-screen transition-colors duration-300 ${bg}`}
@@ -20,9 +59,7 @@ const Contact = ({ theme }) => {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10 lg:mb-14">
-          <p
-            className={`text-xs font-bold tracking-[4px] uppercase text-red-500 mb-3`}
-          >
+          <p className="text-xs font-bold tracking-[4px] uppercase text-red-500 mb-3">
             Customer Care
           </p>
           <h1 className={`text-3xl lg:text-5xl font-bold mb-4 ${text}`}>
@@ -61,6 +98,8 @@ const Contact = ({ theme }) => {
             <p className={`font-semibold text-sm mb-4 ${subtext}`}>
               Select inquiry type
             </p>
+
+            {/* Inquiry type buttons */}
             <div className="flex gap-3 mb-6 flex-wrap">
               {["General inquiry", "Product Support"].map((type) => (
                 <button
@@ -80,57 +119,107 @@ const Contact = ({ theme }) => {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className={`block text-xs font-semibold mb-1.5 ${text}`}>
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className={inputCls}
-                />
+            {/* Success state */}
+            {status === "success" ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                <span className="text-5xl">✅</span>
+                <h3 className={`text-lg font-bold ${text}`}>Message Sent!</h3>
+                <p className={`text-sm ${subtext}`}>
+                  Thanks for reaching out. We'll get back to you soon.
+                </p>
+                <button
+                  onClick={() => setStatus("idle")}
+                  className="mt-2 text-sm text-red-500 hover:text-red-600 font-semibold transition-colors"
+                >
+                  Send another message
+                </button>
               </div>
-              <div>
-                <label className={`block text-xs font-semibold mb-1.5 ${text}`}>
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className={inputCls}
-                />
-              </div>
-            </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label
+                      className={`block text-xs font-semibold mb-1.5 ${text}`}
+                    >
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      name="first_name"
+                      value={formData.first_name}
+                      onChange={handleChange}
+                      placeholder="First Name"
+                      required
+                      className={inputCls}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className={`block text-xs font-semibold mb-1.5 ${text}`}
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      name="last_name"
+                      value={formData.last_name}
+                      onChange={handleChange}
+                      placeholder="Last Name"
+                      required
+                      className={inputCls}
+                    />
+                  </div>
+                </div>
 
-            <div className="mb-4">
-              <label className={`block text-xs font-semibold mb-1.5 ${text}`}>
-                Your Email
-              </label>
-              <input
-                type="email"
-                placeholder="name@email.com"
-                className={inputCls}
-              />
-            </div>
+                <div className="mb-4">
+                  <label
+                    className={`block text-xs font-semibold mb-1.5 ${text}`}
+                  >
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="name@email.com"
+                    required
+                    className={inputCls}
+                  />
+                </div>
 
-            <div className="mb-6">
-              <label className={`block text-xs font-semibold mb-1.5 ${text}`}>
-                Your Message
-              </label>
-              <textarea
-                rows={5}
-                placeholder="Write your message here..."
-                className={`${inputCls} resize-none`}
-              />
-            </div>
+                <div className="mb-6">
+                  <label
+                    className={`block text-xs font-semibold mb-1.5 ${text}`}
+                  >
+                    Your Message
+                  </label>
+                  <textarea
+                    rows={5}
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Write your message here..."
+                    required
+                    className={`${inputCls} resize-none`}
+                  />
+                </div>
 
-            <button
-              type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-md shadow-red-500/20"
-            >
-              Send Message →
-            </button>
+                {status === "error" && (
+                  <p className="text-red-500 text-xs mb-4 text-center">
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-md shadow-red-500/20"
+                >
+                  {status === "sending" ? "Sending..." : "Send Message →"}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

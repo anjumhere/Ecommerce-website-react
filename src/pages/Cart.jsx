@@ -106,7 +106,7 @@ const Cart = ({ theme }) => {
                 className={`border rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row gap-4 shadow-sm transition-colors ${card}`}
               >
                 <div
-                  className={`w-full sm:w-36 h-36 rounded-xl overflow-hidden flex items-center justify-center p-3 shrink-0 ${isDark ? "bg-white/5" : "bg-gray-50"}`}
+                  className={`w-full sm:w-36 h-36 rounded-xl overflow-hidden flex items-center justify-center p-3 shrink-0 ${isDark ? "bg-white/50" : "bg-gray-50"}`}
                 >
                   <img
                     src={item.image}

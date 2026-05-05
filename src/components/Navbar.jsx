@@ -176,7 +176,7 @@ const Navbar = ({
           <div className="flex items-center gap-3">
             <Show when="signed-out">
               <SignInButton>
-                <button className="px-5 py-2 rounded-full bg-gray-900 text-white text-sm font-bold hover:bg-red-500 active:scale-95 transition-all duration-200">
+                <button className="px-5 py-2 rounded-full bg-gray-900 text-white text-sm font-bold hover:bg-red-500 active:scale-95 transition-all cursor-pointer duration-200">
                   Sign In
                 </button>
               </SignInButton>

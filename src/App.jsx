@@ -1,19 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react"; // 1. Added lazy and Suspense
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
-import Cart from "./pages/Cart";
-import Navbar from "./components/Navbar";
-import SignIn from "./pages/SignIn";
-import Footer from "./components/Footer";
 import axios from "axios";
+
+// 2. Change these to lazy imports
+const Home = lazy(() => import("./pages/Home"));
+const Products = lazy(() => import("./pages/Products"));
+const Contact = lazy(() => import("./pages/Contact"));
+const About = lazy(() => import("./pages/About"));
+const Cart = lazy(() => import("./pages/Cart"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+
+// Keep these as standard imports because they are visible immediately
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [openDropDown, setOpenDropDown] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const [theme, setTheme] = useState("light"); // "light" | "dark"
+  const [theme, setTheme] = useState("light");
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -33,7 +37,6 @@ const App = () => {
   };
 
   return (
-    // Apply dark/light class at root so all children can respond
     <div className={theme === "dark" ? "dark" : ""}>
       <BrowserRouter>
         <Navbar
@@ -45,14 +48,17 @@ const App = () => {
           toggleTheme={toggleTheme}
         />
 
-        <Routes>
-          <Route path="/" element={<Home theme={theme} />} />
-          <Route path="/products" element={<Products theme={theme} />} />
-          <Route path="/about" element={<About theme={theme} />} />
-          <Route path="/contact" element={<Contact theme={theme} />} />
-          <Route path="/cart" element={<Cart theme={theme} />} />
-          <Route path="/signin" element={<SignIn />} />
-        </Routes>
+        {/* 3. Wrap Routes in Suspense to show a loader while a page is being downloaded */}
+        <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home theme={theme} />} />
+            <Route path="/products" element={<Products theme={theme} />} />
+            <Route path="/about" element={<About theme={theme} />} />
+            <Route path="/contact" element={<Contact theme={theme} />} />
+            <Route path="/cart" element={<Cart theme={theme} />} />
+            <Route path="/signin" element={<SignIn />} />
+          </Routes>
+        </Suspense>
 
         <Footer theme={theme} />
       </BrowserRouter>
